@@ -12,7 +12,7 @@ export default function ReportContent({ report }: { report: string }) {
 
   return (
     <MathJax.Provider>
-      <Card className="dark w-full shadow-xl overflow-hidden">
+      <Card className="dark w-full shadow-xl overflow-hidden border-accent">
         <CardHeader className="bg-secondary">
           <CardTitle className="text-2xl font-bold text-white">
             Generated Report

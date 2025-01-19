@@ -79,7 +79,7 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://falcon-sincere-gelding.ngrok-free.app/generate-report",
+        "http://localhost:3000/generate-report",
         {
           topic: selectedQuestion.topic,
           question: selectedQuestion.question,
@@ -202,7 +202,7 @@ export default function App() {
         )}
 
         {report && chartData && !loading && (
-          <div id="report-content" className="mt-8 space-y-8">
+          <div id="report-content" className="mt-8 space-y-8 border-accent">
             <ReportContent report={report} />
             <ReportChart chartData={chartData} />
             <div className="flex justify-center">
