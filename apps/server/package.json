@@ -1,0 +1,37 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "start": "nodemon ./dist/index.js",
+    "dev": "npm run build && npm run start"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure-rest/ai-inference": "latest",
+    "@azure/core-auth": "latest",
+    "@azure/core-sse": "latest",
+    "@huggingface/agents": "^0.0.5",
+    "@huggingface/inference": "^3.0.0",
+    "@tavily/core": "^0.0.2",
+    "axios": "^1.7.9",
+    "chart.js": "^4.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2"
+  }
+}
