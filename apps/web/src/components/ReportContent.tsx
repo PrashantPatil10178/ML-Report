@@ -12,7 +12,7 @@ const processLatex = (content: ReactNode): ReactNode => {
     return content;
   }
 
-  const parts = content.split(/(\[[\s\S]+?\]|$$[\s\S]+?$$)/g);
+  const parts = content.split(/([[\s\S]+?]|$$[\s\S]+?$$)/g);
   return parts.map((part, index) => {
     if (part.startsWith("[") && part.endsWith("]")) {
       return <BlockMath key={index} math={part.slice(1, -1)} />;
@@ -26,12 +26,16 @@ const processLatex = (content: ReactNode): ReactNode => {
 export default function ReportContent({ report }: { report: string }) {
   return (
     <Card className="dark w-full shadow-xl overflow-hidden border-accent">
+      {" "}
       <CardHeader className="bg-secondary">
+        {" "}
         <CardTitle className="text-2xl font-bold text-white">
-          Generated Report
-        </CardTitle>
-      </CardHeader>
+          {" "}
+          Generated Report{" "}
+        </CardTitle>{" "}
+      </CardHeader>{" "}
       <CardContent className="prose prose-invert max-w-none p-6 space-y-4">
+        {" "}
         <ReactMarkdown
           children={report}
           remarkPlugins={[remarkMath, remarkGfm]}
@@ -63,19 +67,23 @@ export default function ReportContent({ report }: { report: string }) {
             ),
             table: ({ children }) => (
               <div className="overflow-x-auto my-4">
+                {" "}
                 <table className="min-w-full divide-y divide-gray-700">
-                  {children}
-                </table>
+                  {" "}
+                  {children}{" "}
+                </table>{" "}
               </div>
             ),
             th: ({ children }) => (
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                {children}
+                {" "}
+                {children}{" "}
               </th>
             ),
             td: ({ children }) => (
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                {children}
+                {" "}
+                {children}{" "}
               </td>
             ),
             a: ({ href, children }) => (
@@ -85,17 +93,19 @@ export default function ReportContent({ report }: { report: string }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {children}
+                {" "}
+                {children}{" "}
               </a>
             ),
             blockquote: ({ children }) => (
               <blockquote className="border-l-4 border-gray-500 pl-4 italic my-4 text-gray-400">
-                {children}
+                {" "}
+                {children}{" "}
               </blockquote>
             ),
           }}
-        />
-      </CardContent>
+        />{" "}
+      </CardContent>{" "}
     </Card>
   );
 }

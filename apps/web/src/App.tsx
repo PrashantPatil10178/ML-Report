@@ -18,11 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./components/ui/select";
-import { Skeleton } from "./components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import ReportContent from "./components/ReportContent";
 import ReportChart from "./components/ReportChart";
+import LoadingModal from "./components/LoadingModel";
 
 interface ChartData {
   chartType: string;
@@ -42,7 +42,7 @@ const questions = [
   {
     topic: "Regression vs. Correlation",
     question:
-      "A company is interested in predicting its annual revenue based on various factors like advertising spend, product pricing, and market trends. Explain the difference between regression and correlation, and why regression would be more appropriate for this prediction task than correlation.Give me a chart data for this and Formulas for Regression and Correlation",
+      "A company is interested in predicting its annual revenue based on various factors like advertising spend, product pricing, and market trends. Explain the difference between regression and correlation, and why regression would be more appropriate for this prediction task than correlation. Give me a chart data for this and Formulas for Regression and Correlation",
   },
   {
     topic: "Types of Regression (Univariate vs. Multivariate)",
@@ -58,6 +58,42 @@ const questions = [
     topic: "Simple Linear vs. Multiple Linear Regression",
     question:
       "A company is trying to analyze its total employee performance based on their years of experience and training hours. Would a simple linear regression or multiple linear regression be more suitable for this task? Justify your choice.",
+  },
+  {
+    topic: "Regression Analysis in Time Series",
+    question:
+      "You are analyzing monthly sales data for the past 5 years to forecast future sales. How would you approach this using regression analysis? What specific challenges might you encounter when applying regression to time series data, and how would you address them?",
+  },
+  {
+    topic: "Bias-Variance Tradeoff",
+    question:
+      "In a machine learning model designed to predict customer churn, you notice that the model performs well on training data but poorly on validation data. Discuss how the bias-variance tradeoff explains this issue and suggest ways to resolve it.",
+  },
+  {
+    topic: "Overfitting and Underfitting",
+    question:
+      "You are building a predictive model for housing prices based on various features (e.g., square footage, number of bedrooms, neighborhood). After tuning the model, you notice that it fits the training data perfectly but struggles to generalize to new data. What is happening in terms of overfitting, and how can you address it?",
+  },
+  {
+    topic: "Regression Techniques - Linear Regression",
+    question:
+      "A startup company wants to predict monthly revenue based on advertising spend using a linear regression model. What are the steps involved in building and evaluating this model, and how would you interpret the model's coefficients?",
+  },
+  {
+    topic: "Polynomial Regression",
+    question:
+      "You notice that the relationship between advertising spend and revenue is not linear but follows a curvilinear pattern. How would you apply polynomial regression to model this relationship, and what challenges might arise when using this technique?",
+  },
+  {
+    topic: "Evaluation Metrics: MSE, MAE, RMSE, R-squared",
+    question:
+      "You've applied a random forest regression model to predict customer lifetime value (CLV). After training the model, you evaluate it using metrics such as MSE, MAE, RMSE, and R-squared. Which metric would you prioritize for model evaluation, and why? How do these metrics help in assessing model performance?",
+  },
+  {
+    topic:
+      "Advanced Regression Techniques: Random Forest and Support Vector Regression",
+    question:
+      "In an attempt to predict energy consumption for a manufacturing plant, you are choosing between random forest regression and support vector regression. What factors would influence your choice between these two techniques, and how would you assess their respective advantages and limitations for this particular application?",
   },
 ];
 
@@ -81,7 +117,7 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://api.webfuze.in/generate-report",
+        "http://localhost:9000/generate-report",
         {
           topic: selectedQuestion.topic,
           question: selectedQuestion.question,
@@ -158,18 +194,7 @@ export default function App() {
           </CardFooter>
         </Card>
 
-        {loading && (
-          <Card className="mt-8 border-accent shadow-lg rounded-md">
-            <CardHeader>
-              <Skeleton className="h-4 w-1/2 bg-gray-300" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-full mb-2 bg-gray-300" />
-              <Skeleton className="h-4 w-full mb-2 bg-gray-300" />
-              <Skeleton className="h-4 w-2/3 bg-gray-300" />
-            </CardContent>
-          </Card>
-        )}
+        {loading && <LoadingModal />}
 
         {report && chartData && !loading && (
           <div id="report-content" className="mt-8 space-y-8 border-accent">

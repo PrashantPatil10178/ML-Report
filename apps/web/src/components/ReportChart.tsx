@@ -1,26 +1,10 @@
-import { Line, Bar, Scatter } from "react-chartjs-2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 interface ChartData {
   chartType: string;
@@ -36,42 +20,73 @@ interface ChartData {
   description: string;
 }
 
-interface ReportChartProps {
-  chartData: ChartData;
-}
-
-export default function ReportChart({ chartData }: ReportChartProps) {
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
+export default function ReportChart({ chartData }: { chartData: ChartData }) {
+  const formattedData = chartData.data.labels.map((label, index) => ({
+    name: label,
+    ...chartData.data.datasets.reduce(
+      (acc, dataset) => {
+        acc[dataset.label] = dataset.data[index];
+        return acc;
       },
-      title: {
-        display: true,
-        text: chartData.data.datasets[0].label,
-      },
-    },
-  };
-
-  const renderChart = () => {
-    switch (chartData.chartType) {
-      case "line":
-        return <Line options={options} data={chartData.data} />;
-      case "bar":
-        return <Bar options={options} data={chartData.data} />;
-      case "scatter":
-        return <Scatter options={options} data={chartData.data} />;
-      default:
-        return <Line options={options} data={chartData.data} />;
-    }
-  };
+      {} as Record<string, number>
+    ),
+  }));
 
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Chart</h2>
-      {renderChart()}
-      <p className="mt-4 text-sm text-gray-500">{chartData.description}</p>
-    </div>
+    <Card className="w-full shadow-xl overflow-hidden">
+      <CardHeader>
+        <CardTitle>{chartData.chartType} Chart</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          config={{
+            ...chartData.data.datasets.reduce(
+              (acc, dataset, index) => {
+                acc[dataset.label] = {
+                  label: dataset.label,
+                  color: dataset.borderColor,
+                };
+                return acc;
+              },
+              {} as Record<string, { label: string; color: string }>
+            ),
+          }}
+          className="h-[300px]"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={formattedData}>
+              <XAxis
+                dataKey="name"
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `${value}`}
+              />
+              {chartData.data.datasets.map((dataset, index) => (
+                <Line
+                  key={index}
+                  type="monotone"
+                  dataKey={dataset.label}
+                  stroke={dataset.borderColor}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              ))}
+              <ChartTooltip content={<ChartTooltipContent />} />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+        <p className="text-sm text-muted-foreground mt-2">
+          {chartData.description}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
