@@ -81,7 +81,7 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://falcon-sincere-gelding.ngrok-free.app/generate-report",
+        "https://api.webfuze.in/generate-report",
         {
           topic: selectedQuestion.topic,
           question: selectedQuestion.question,
