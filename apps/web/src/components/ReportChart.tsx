@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Line } from "react-chartjs-2";
+import { Line, Bar, Scatter } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -16,19 +16,24 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
 interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-  }[];
+  chartType: string;
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      tension: number;
+    }[];
+  };
+  description: string;
 }
 
 interface ReportChartProps {
@@ -36,48 +41,37 @@ interface ReportChartProps {
 }
 
 export default function ReportChart({ chartData }: ReportChartProps) {
-  const chartOptions = {
+  const options = {
     responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)",
-        },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.7)",
-        },
-      },
-      y: {
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)",
-        },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.7)",
-        },
-      },
-    },
     plugins: {
       legend: {
-        labels: {
-          color: "rgba(255, 255, 255, 0.7)",
-        },
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: chartData.data.datasets[0].label,
       },
     },
   };
 
+  const renderChart = () => {
+    switch (chartData.chartType) {
+      case "line":
+        return <Line options={options} data={chartData.data} />;
+      case "bar":
+        return <Bar options={options} data={chartData.data} />;
+      case "scatter":
+        return <Scatter options={options} data={chartData.data} />;
+      default:
+        return <Line options={options} data={chartData.data} />;
+    }
+  };
+
   return (
-    <Card className="dark w-full shadow-xl overflow-hidden">
-      <CardHeader className="bg-secondary">
-        <CardTitle className="text-2xl font-bold text-white">
-          Annual Revenue Chart
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6">
-        <div className="h-[400px]">
-          <Line data={chartData} options={chartOptions} />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold mb-4">Chart</h2>
+      {renderChart()}
+      <p className="mt-4 text-sm text-gray-500">{chartData.description}</p>
+    </div>
   );
 }

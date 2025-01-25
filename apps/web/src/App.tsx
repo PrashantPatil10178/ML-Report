@@ -23,17 +23,19 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import ReportContent from "./components/ReportContent";
 import ReportChart from "./components/ReportChart";
-// import { jsPDF } from "jspdf";
-// import html2canvas from "html2canvas";
 
 interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-  }[];
+  chartType: string;
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      tension: number;
+    }[];
+  };
+  description: string;
 }
 
 const questions = [
@@ -79,25 +81,16 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/generate-report",
+        "https://falcon-sincere-gelding.ngrok-free.app/generate-report",
         {
           topic: selectedQuestion.topic,
           question: selectedQuestion.question,
         }
       );
-      const reportData = response.data.data;
-      setReport(reportData);
-      setChartData({
-        labels: ["Advertising Spend", "Product Pricing", "Market Trends"],
-        datasets: [
-          {
-            label: "Annual Revenue",
-            data: [200000, 250000, 300000],
-            borderColor: "rgb(75, 192, 192)",
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-          },
-        ],
-      });
+      const { report, chartData } = response.data;
+      setReport(report);
+      setChartData(chartData);
+      console.log("Report generated:", report);
     } catch (error) {
       console.error("Error fetching report:", error);
       toast({
@@ -109,29 +102,6 @@ export default function App() {
       setLoading(false);
     }
   };
-
-  // const downloadPDF = async () => {
-  //   const element = document.getElementById("report-content");
-  //   if (!element) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to download PDF. Please try again.",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-
-  //   const canvas = await html2canvas(element);
-  //   const data = canvas.toDataURL("image/png");
-
-  //   const pdf = new jsPDF();
-  //   const imgProperties = pdf.getImageProperties(data);
-  //   const pdfWidth = pdf.internal.pageSize.getWidth();
-  //   const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
-
-  //   pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
-  //   pdf.save("ml_report.pdf");
-  // };
 
   return (
     <div className="dark min-h-screen text-primary bg-background p-4">
@@ -160,7 +130,7 @@ export default function App() {
               <Label htmlFor="question">Select a Question</Label>
               <Select
                 onValueChange={(value) =>
-                  setSelectedQuestion(questions[parseInt(value)])
+                  setSelectedQuestion(questions[Number.parseInt(value)])
                 }
               >
                 <SelectTrigger className="bg-accent text-white border border-gray-300 focus:ring-2 focus:ring-primary">
@@ -205,14 +175,6 @@ export default function App() {
           <div id="report-content" className="mt-8 space-y-8 border-accent">
             <ReportContent report={report} />
             <ReportChart chartData={chartData} />
-            <div className="flex justify-center">
-              {/* <Button
-                onClick={downloadPDF}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md"
-              >
-                Download as PDF
-              </Button> */}
-            </div>
           </div>
         )}
       </div>
