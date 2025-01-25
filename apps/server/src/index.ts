@@ -88,20 +88,17 @@ async function makeRequest(
     : generateRequestBody(apiKey, topic, question);
 
   try {
-    const response = await axios.post(
-      "https://cehewlkelxpx6ut2x2crpewo3y0gmemy.lambda-url.us-east-1.on.aws/researchAPI",
-      body,
-      {
-        headers: {
-          Accept: "*/*",
-          "Accept-Language": "en-US,en;q=0.9",
-          "Content-Type": "application/json",
-          Priority: "u=3, i",
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15",
-        },
-      }
-    );
+    console.log(process.env.URL);
+    const response = await axios.post(`${process.env.URL}`, body, {
+      headers: {
+        Accept: "*/*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        Priority: "u=3, i",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15",
+      },
+    });
 
     return response.data;
   } catch (error: any) {
