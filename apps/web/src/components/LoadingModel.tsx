@@ -1,5 +1,5 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Loader2, Brain, Sparkles } from "lucide-react";
+import { Brain, Sparkles } from "lucide-react";
 
 export default function LoadingModal() {
   return (

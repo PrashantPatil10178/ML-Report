@@ -41,7 +41,7 @@ export default function ReportChart({ chartData }: { chartData: ChartData }) {
         <ChartContainer
           config={{
             ...chartData.data.datasets.reduce(
-              (acc, dataset, index) => {
+              (acc, dataset) => {
                 acc[dataset.label] = {
                   label: dataset.label,
                   color: dataset.borderColor,
